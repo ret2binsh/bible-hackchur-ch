@@ -12,10 +12,6 @@
       link: '/recon/passive'
     - label: 'Active'
       link: '/recon/active'
-    - label: 'On-Target: NIX'
-      link: '/recon/on-target-nix'
-    - label: 'On-Target: WIN'
-      link: '/recon/on-target-win'
 - label: 'Access'
   items:
     - label: 'Port List'
@@ -24,8 +20,10 @@
       link: '/access/ssh'
 - label: 'PrivEsc'
   items:
-    - label: 'Linux'
-      link: '/privesc/linux'
+    - label: 'NIX'
+      link: '/privesc/nix'
+    - label: 'WIN'
+      link: '/privesc/win'
 - label: 'Infil / Exfil'
   items:
     - label: 'Netcat'
