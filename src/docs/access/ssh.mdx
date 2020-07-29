@@ -1,0 +1,57 @@
+---
+title: SSH
+---
+
+## Basic connection
+```bash
+ssh user@target
+```
+
+## Forward Tunnel with Local Listener
+```bash
+ssh -L 2000:target2:22 user@target1
+```
+- `2000` local port
+- `22` remote port
+
+## Reverse Tunnel with Remote Listener
+```bash
+ssh -R 3000:127.0.0.1:22 backdoor@target1
+```
+- `3000` remote port
+- `22` local port
+
+## Fork Tunnel
+Two forward tunnels with a local listener over a single TCP connection to `target1`
+```bash
+ssh -L 2000:target2:22 -L 2001:target2:80 user@target1
+```
+- `2000` local port for connection 1
+- `22` remote port for connection 1
+- `2001` local port for connection 2
+- `80` remote port for connection 2
+
+## Bidirectional Tunnel
+Forward & Reverse Tunnels with Local & Reverse Listeners utilizing a single TCP connection to TARGET1
+```bash
+ssh -L 2000:target2:22 -R 3000:127.0.0.1:22 user@target1
+```
+- `2000` local port for forward listener
+- `3000` remote port for reverse tunnel
+
+## Tunnelception
+SSH tunnel to `target3` through a tunnel to `target2` through a tunnel to `target1`
+```bash
+ssh -L 2000:target2:22 user@target1
+ssh -L 2001:target3:22 -p2000 user@target2
+```
+- `2000` local port for `target2` connection
+- `2001` local port for `target3` cibbection
+
+## Add Session Tunnel
+Add a Forward Tunnel in an active SSH session `target1`
+```bash
+# must be a fresh new line so hit enter and try again if you don't drop into menu
+-L 2000:target2:22
+```
+- `2000` local port

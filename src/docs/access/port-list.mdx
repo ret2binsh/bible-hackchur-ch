@@ -1,0 +1,30 @@
+---
+title: Port List
+---
+
+## Common Ports
+Ports from `0` through `1023` are well known ports. On most systems, services run on well-known ports require superuser privileges. Ports `1024` through `49151` are registered ports and typically do not require superuser privileges. Both well-known and registered ports are typically running a known service on that port, but it is **not guaranteed**.
+
+Below is a list of ports commonly used in gaining access to a target:
+
+- `21` [FTP](/access/ftp)
+- `22` [SSH](/access/ssh)
+- `23` [Telnet](/access/telnet)
+- `25` [SMTP](/access/smtp)
+- `53` [DNS](/access/dns)
+- `80` [HTTP](/access/http)
+- `88` [Kerberos](/access/kerberos)
+- `110` [POP3](/access/pop3)
+- `143` [IMAP](/access/imap)
+- `443` [HTTPS](/access/https)
+- `3000` [HTTP](/access/http), [Ruby On Rails](/access/ruby-on-rails), [Meteor](/access/meteor)
+- `5601` [Kibana](/access/kibana)
+- `8000` [HTTP](/access/http), [DynamoDB](/access/dynamodb), [Django](/access/django)
+- `8080` [HTTP](/access/http), [Apache Tomcat](/access/apache-tomcat)
+- `8443` [HTTPS](/access/https), [Apache Tomcat SSL](/access/apache-tomcat)
+- `8888` [HTTP](/access/http)
+- `9200` [ElasticSearch](/access/elasticsearch)
+- `9600` [LogStash](/access/logstash)
+
+## Dynamic, Private, Ephemeral Ports
+Ports from `49152` through `65535` are used for private or customized services, for temporary purposes, and for automatic allocation of ephemeral ports.

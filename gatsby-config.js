@@ -1,16 +1,16 @@
 module.exports = {
   siteMetadata: {
-    siteTitle: `@rocketseat/gatsby-theme-docs`,
-    defaultTitle: `@rocketseat/gatsby-theme-docs`,
-    siteTitleShort: `gatsby-theme-docs`,
-    siteDescription: `Out of the box Gatsby Theme for creating documentation websites easily and quickly`,
-    siteUrl: `https://rocketdocs.netlify.com`,
-    siteAuthor: `@rocketseat`,
+    siteTitle: `Hackchurch Bible`,
+    defaultTitle: `Hackchurch Bible`,
+    siteTitleShort: `hackchurch-bible`,
+    siteDescription: `The free manual for cyber security`,
+    siteUrl: `https://bible.hackchur.ch`,
+    siteAuthor: `@jesseflorig`,
     siteImage: `/banner.png`,
     siteLanguage: `en`,
-    themeColor: `#7159c1`,
+    themeColor: `#b10a1b`,
     basePath: `/`,
-    footer: `Theme by Rocketseat`,
+    footer: `Sponsored by Hack Church`,
   },
   plugins: [
     {
@@ -18,17 +18,17 @@ module.exports = {
       options: {
         configPath: `src/config`,
         docsPath: `src/docs`,
-        githubUrl: `https://github.com/rocketseat/gatsby-themes`,
+        githubUrl: `https://github.com/hack-church/bible-hachur-ch`,
         baseDir: `examples/gatsby-theme-docs`,
       },
     },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Rocketseat Gatsby Themes`,
-        short_name: `RS Gatsby Themes`,
+        name: `Hack Church Bible`,
+        short_name: `HC Bible`,
         start_url: `/`,
-        background_color: `#ffffff`,
+        background_color: `#b10a1b`,
         display: `standalone`,
         icon: `static/favicon.png`,
       },
@@ -43,7 +43,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-canonical-urls`,
       options: {
-        siteUrl: `https://rocketdocs.netlify.com`,
+        siteUrl: `https://bible.hackchur.ch`,
       },
     },
     `gatsby-plugin-offline`,
