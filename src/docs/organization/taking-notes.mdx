@@ -6,22 +6,23 @@ Taking good notes can save you a lot of frustration. It's not uncommon to find y
 
 Taking notes can be as simple as writing a text file, or as complex as using a dedicated application to organize your notes with something like [Cherry Tree](https://www.giuspen.com/cherrytree/).
 
+Often times its as simple as redirecting the `stdOut` or `stdErr` of a command to a file.
+
 ## Output Redirection
-Often times its as easy as writing the `stdOut` or `stdErr` of a command to a file.
-
-Write current directory listing to notes:
+Write current directory listing to notes
 ```bash
-ls > notes
+ls > output
 ```
+- `output` filename to write to
 
-Append somefile contents to notes:
+Append somefile contents to notes
 ```bash
-cat somefile >> notes
+cat somefile >> output
 ```
+- `output` filename to append to
 
-## Nmap Scans
-
-Save an `nmap` scan of `192.168.1.1` to `myScan`
+Save an `nmap` scan to a file
 ```bash
-nmap 192.168.1.1 -oN myScan
+nmap target -oN output
 ```
+- `target` target machine IP
