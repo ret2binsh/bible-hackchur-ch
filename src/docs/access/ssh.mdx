@@ -2,12 +2,20 @@
 title: SSH
 ---
 
+## Philosophy
+SSH can not only provide remote access to a system but can be leveraged to provide access to subnets not reachable from the outside. A common scenario would be a firewall exemption allowing technician to SSH into a DMZ server. However, if we can gain access to this system, we could leverage this to pivot further into the network.
+
 ## Basic connection
+The default port option (-p 22) is implied and can therefore be omitted unless requiring a different port number
+attacker: >RHP------->22 TARGET1
 ```bash
-ssh user@target
+ssh -p 22 user@target1
 ```
 
 ## Forward Tunnel with Local Listener
+This scenario starts a listening port on the origin machine which will forward packets to target2. With this example we can SSH into target2 through target1 with the aforementioned syntax. This is a great example of pivoting deeper into a network.
+attacker: >RHP------->22 TARGET1
+attacker: >2000----------TARGET1---------->22 TARGET2
 ```bash
 ssh -L 2000:target2:22 user@target1
 ```
@@ -15,14 +23,22 @@ ssh -L 2000:target2:22 user@target1
 - `22` remote port
 
 ## Reverse Tunnel with Remote Listener
+A slightly tricky concept that becomes powerful once understood. Assume a scenario that target1 is accessible to us, yet sits behind a firewall that blocks all other inbound traffic. We could leverage this command to exfil data through our SSH tunnel by starting a listener within the network on target1. This can be paired with scp or ncat to "pull" data through the tunnel back to our attacker box.
+attacker: >RHP------->22 TARGET1
+attacker: 9000<----------TARGET1--<3000
 ```bash
-ssh -R 3000:127.0.0.1:22 backdoor@target1
+ssh -R 3000:127.0.0.1:9000 backdoor@target1
 ```
+- `127.0.0.1` host to be forwarded to (in this case our loopback addr on the attacker box)
 - `3000` remote port
-- `22` local port
+- `9000` local port (potentially our ncat listener for exfil)
 
 ## Fork Tunnel
 Two forward tunnels with a local listener over a single TCP connection to `target1`
+This takes further advantage of SSH's ability to create multiple channels and multiplex tcp streams through a single socket connection. This can be used to avoid blue team detection by ensuring we limit the amount of concurrent outbound connections.
+attacker: >RHP--------->22 TARGET1
+attacker: >2000------------TARGET1------>22 TARGET2
+attacker: >2001------------TARGET1------>80 TARGET2
 ```bash
 ssh -L 2000:target2:22 -L 2001:target2:80 user@target1
 ```
@@ -33,14 +49,22 @@ ssh -L 2000:target2:22 -L 2001:target2:80 user@target1
 
 ## Bidirectional Tunnel
 Forward & Reverse Tunnels with Local & Reverse Listeners utilizing a single TCP connection to TARGET1
+This further emphasizes the fact that we can create multiple channels as well as mix-and-match the direction of our tunnels. This particular scenario could be useful for throwing an MSF exploit through the tunnel and catch the provided callback on our reverse listener.
+attacker: >RHP------------>22 TARGET1
+attacker: >2000---------------TARGET1-------->445 TARGET2
+attacker: <8080---------------TARGET1-------------TARGET2-<3000
 ```bash
-ssh -L 2000:target2:22 -R 3000:127.0.0.1:22 user@target1
+ssh -L 2000:target2:445 -R 3000:127.0.0.1:8080 user@target1
 ```
 - `2000` local port for forward listener
 - `3000` remote port for reverse tunnel
 
 ## Tunnelception
 SSH tunnel to `target3` through a tunnel to `target2` through a tunnel to `target1`
+A further abstracted concept to show that we are not limited by how deep we can penetrate and pivot through various machines. We are limited only by network reachability, ACLs, and SSH credentials.
+attacker: >RHP----->22 TARGET1
+attacker: >2000--------TARGET1------>22 TARGET2
+attacker: >2001--------TARGET1----------TARGET2------->TARGET3
 ```bash
 ssh -L 2000:target2:22 user@target1
 ssh -L 2001:target3:22 -p2000 user@target2
@@ -49,9 +73,17 @@ ssh -L 2001:target3:22 -p2000 user@target2
 - `2001` local port for `target3` cibbection
 
 ## Add Session Tunnel
-Add a Forward Tunnel in an active SSH session `target1`
+Add a Forward Tunnel in an active SSH session `target1` in order to leverage the single socket connection for multiple channels
 ```bash
 # must be a fresh new line so hit enter and try again if you don't drop into menu
+~C
 -L 2000:target2:22
 ```
 - `2000` local port
+
+## Gotcha's
+Of particular note is leveraging reverse tunnels. By default, SSH on linux will start the listener on 127.0.0.1 and will not be reachable on the LAN. Either /etc/ssh/sshd_config needs to have GATEWAYPORTS enabled or use the switch -gR to try to force a global listener. If all else fails, an SSH tunnel loop trick can be used to expose the port using the following syntax. Note that the second command is executed on target1.
+```bash
+ssh -R 3000:127.0.0.1:22 user@target1
+ssh -L 192.168.1.1:3000:127.0.0.1:3000 user@target1
+```
