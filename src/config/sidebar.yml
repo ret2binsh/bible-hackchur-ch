@@ -34,6 +34,10 @@
       link: '/cleanup/remove-artifacts'
     - label: 'Timestomp'
       link: '/cleanup/timestomp'
+- label: 'Binary Exploitation'
+  items:
+    - label: 'Radare2 Cheatsheet'
+      link: '/binexp/r2-cheatsheet'
 - label: 'Additional Resources'
   link: '/additional-resources'
 - label: 'Glossary'
